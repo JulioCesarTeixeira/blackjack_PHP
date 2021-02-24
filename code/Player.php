@@ -25,9 +25,10 @@ class Player
         if ($this->getScore() > self::MAX_NUMBER) {
             $this->lost = true;
         }
-        if ($this->getScore() === self::MAX_NUMBER) {
-            $this->lost = false;
-        }
+    }
+
+    public function hasBlackjack(): bool {
+        return $this->getScore() === self::MAX_NUMBER;
     }
 
     //adjust this

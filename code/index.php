@@ -37,37 +37,37 @@ if (!isset($_SESSION['blackjack'])) {
 $blackjack = $_SESSION['blackjack'];
 $disabled = "";
 $outcome = "";
-handleButtons($_SESSION['blackjack'], $disabled, $outcome);
-showScores($_SESSION['blackjack']->getPlayer()->getScore(), $_SESSION['blackjack']->getDealer()->getScore());
+handleButtons($blackjack, $disabled, $outcome);
+showScores($blackjack);
 showCards($_SESSION['blackjack']->getPlayer()->getCards());
-
+checkBlackjack($blackjack, $disabled, $outcome);
 
 function handleButtons(Blackjack $blackjack, &$disabled, &$outcome){
     if (isset($_POST['action'])) {
         switch ($_POST['action']) {
             case"hit":
                 $blackjack->getPlayer()->hit($blackjack->getDeck());
-                if ($blackjack->getPlayer()->hasLost()) {
+                if($blackjack->getPlayer()->hasBlackjack()){
                     $disabled = "disabled";
-                    $outcome = "you lose, bobby";
-                } else {
+                    $outcome = "You win, bobby";
+                } else if ($blackjack->getPlayer()->hasLost()){
                     $disabled = "disabled";
-                    $outcome = "you win, bobby";
+                    $outcome = "You lose, bobby";
                 }
                 break;
             case"surrender":
                 $blackjack->getPlayer()->surrender();
                 $disabled = "disabled";
-                $outcome = "you lose, bobby";
+                $outcome = "You lose, bobby";
                 break;
             case"stand":
                 $disabled = "disabled";
                 $blackjack->getDealer()->hit($blackjack->getDeck());
                 //condition if Win or lose
                 if($blackjack->getPlayer()->isWinner($blackjack->getDealer())){
-                    $outcome = "you win, bobby";
+                    $outcome = "You win, bobby";
                 } else {
-                    $outcome = "you lose, bobby";
+                    $outcome = "You lose, bobby";
                 }
                 break;
             case"reset":
@@ -77,12 +77,11 @@ function handleButtons(Blackjack $blackjack, &$disabled, &$outcome){
     }
 }
 
-
-function showScores($playerScore, $dealerScore): void
+function showScores(Blackjack $blackjack): void
 {
-    echo 'Dealer: ' . $dealerScore . PHP_EOL;
+    echo 'Dealer: ' . $blackjack->getDealer()->getScore() . PHP_EOL;
     echo '<br>';
-    echo 'Your total: ' . $playerScore . PHP_EOL;
+    echo 'Your total: ' . $blackjack->getPlayer()->getScore() . PHP_EOL;
 }
 
 function showCards($cards): void
@@ -91,11 +90,19 @@ function showCards($cards): void
         echo $card->getUnicodeCharacter(true) . PHP_EOL;
     }
 }
-
+function checkBlackjack (Blackjack $blackjack, &$disabled, &$outcome) {
+    if($blackjack->getPlayer()->hasBlackjack()){
+        $disabled = "disabled";
+        $outcome = "You win, bobby";
+    } else if ($blackjack->getDealer()->hasBlackjack()){
+        $disabled = "disabled";
+        $outcome = "You lose, bobby";
+    }
+}
 ?>
 
 <div>
-    <span><?php echo $outcome ?></span>
+    <h4><?php echo $outcome ?></h4>
 </div>
 <form method="POST">
     <div class="form-row">
@@ -126,3 +133,5 @@ function showCards($cards): void
         </div>
     </div>
 </form>
+</body>
+</html>
