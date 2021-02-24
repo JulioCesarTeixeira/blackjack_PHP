@@ -1,48 +1,46 @@
 <?php
 declare(strict_types=1);
 
-require 'Card.php';
-require 'Deck.php';
-require 'Player.php';
-require 'Suit.php';
-
 
 class Blackjack
 {
     //properties
     private Player $player;
-    private Player $dealer;
+    private Dealer $dealer;
     private Deck $deck;
 
     public function __construct()
     {
-    $this->dealer = new Player($this->getDeck());
-    $this->player = new Player($this->getDeck());
-    $this->deck = new Deck();
-    $this->deck->shuffle();
+        $this->deck = new Deck();
+        $this->deck->shuffle();
+        $this->dealer = new Dealer($this->getDeck());
+        $this->player = new Player($this->getDeck());
     }
 
     //methods
-    public function getPlayer() : Player
+    public function getPlayer(): Player
     {
         return $this->player;
     }
 
-    public function getDealer() : Player
+    public function getDealer(): Dealer
     {
         return $this->dealer;
     }
 
-    public function getDeck() : Deck
+    public function getDeck(): Deck
     {
         return $this->deck;
     }
 
-}
-
-$deck = new Deck();
-$deck->shuffle();
-foreach($deck->getCards() AS $card) {
-    echo $card->getUnicodeCharacter(true);
-    echo '<br>';
+//    public function checkWinner()
+//    {
+//        if ($_SESSION['blackjack']->getPlayer()->showScores() > $_SESSION['blackjack']->getDealer()->showScores()) {
+//            if ($_SESSION['blackjack']->getPlayer()->hasLost(true)) {
+//                return true;
+//            }
+//        } else if ($_SESSION['blackjack']->getPlayer()->showScores() === 21) {
+//            return $_SESSION['blackjack']->getDealer()->hasLost(true);
+//        }
+//    }
 }
