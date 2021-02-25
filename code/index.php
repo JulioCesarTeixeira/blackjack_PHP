@@ -71,8 +71,10 @@ function handleButtons(Blackjack $blackjack, &$disabled, &$outcome){
                 }
                 break;
             case"reset":
-                $_SESSION['blackjack'] = new Blackjack();
-                break;
+//                $_SESSION['blackjack'] = new Blackjack();
+                session_destroy();
+                header('location: index.php');
+                exit;
         }
     }
 }
